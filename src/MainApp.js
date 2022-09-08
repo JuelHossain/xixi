@@ -2,6 +2,8 @@ import { AppShell, Container } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import AppFooter from "./Components/Header/AppFooter";
 import AppHeader from "./Components/Header/AppHeader";
+import Login from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
 import Home from "./Pages/Home/home";
 
 export default function MainApp() {
@@ -17,6 +19,8 @@ export default function MainApp() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/home" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
         </Routes>
       </Container>
     </AppShell>
