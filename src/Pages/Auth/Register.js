@@ -7,7 +7,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconAt, IconKey } from "@tabler/icons";
+import { IconKey, IconMail, IconUserExclamation } from "@tabler/icons";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -25,16 +25,20 @@ const Register = () => {
         </box>
         <Stack>
           <Input
-            icon={<IconAt />}
+            icon={<IconUserExclamation />}
             variant="filled"
             placeholder="Your First Name"
           />
           <Input
-            icon={<IconAt />}
+            icon={<IconUserExclamation />}
             variant="filled"
             placeholder="Your Last Name"
           />
-          <Input icon={<IconAt />} variant="filled" placeholder="Your email" />
+          <Input
+            icon={<IconMail />}
+            variant="filled"
+            placeholder="Your email"
+          />
           <PasswordInput
             icon={<IconKey />}
             variant="filled"
@@ -50,6 +54,9 @@ const Register = () => {
         <Group position="center">
           <Button component={Link} variant="outline" compact to="/login">
             Login Here
+          </Button>
+          <Button component={Link} variant="outline" compact to="/login">
+            Read Terms & Conditions
           </Button>
         </Group>
       </Stack>
