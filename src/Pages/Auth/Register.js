@@ -2,48 +2,85 @@ import {
   Button,
   Group,
   Input,
+  NumberInput,
   PasswordInput,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
-import { IconKey, IconMail, IconUserExclamation } from "@tabler/icons";
-import React from "react";
+import {
+  IconKey,
+  IconLocation,
+  IconMail,
+  IconPhone,
+  IconUserExclamation,
+} from "@tabler/icons";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Register = () => {
+  const [additional, setAdditional] = useState(false);
   return (
     <Stack className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30">
       <Stack>
-        <box>
-          <Title align="center" order={3} className="text-main-5">
-            Register Here
-          </Title>
-          <Text align="center" className="text-main-5">
-            With Your Details
-          </Text>
-        </box>
+        <Title align="center" order={3} className="text-main-5">
+          Register Here
+        </Title>
+
         <Stack>
-          <Input
-            icon={<IconUserExclamation />}
-            variant="filled"
-            placeholder="Your First Name"
-          />
-          <Input
-            icon={<IconUserExclamation />}
-            variant="filled"
-            placeholder="Your Last Name"
-          />
+          <Group className="sm:flex-nowrap">
+            <Input
+              className="w-full"
+              icon={<IconUserExclamation />}
+              variant="filled"
+              placeholder="First Name"
+            />
+            <Input
+              className="w-full"
+              icon={<IconUserExclamation />}
+              variant="filled"
+              placeholder="Last Name"
+            />
+          </Group>
           <Input
             icon={<IconMail />}
             variant="filled"
-            placeholder="Your email"
+            placeholder="Enter Email"
           />
           <PasswordInput
             icon={<IconKey />}
             variant="filled"
-            placeholder="Your Password"
+            placeholder="Enter Password"
           />
+          <PasswordInput
+            icon={<IconKey />}
+            variant="filled"
+            placeholder="Confirm Password"
+          />
+          {additional && (
+            <>
+              <NumberInput
+                hideControls
+                icon={<IconPhone />}
+                variant="filled"
+                placeholder="Enter  Phone Number"
+              />
+              <Input
+                hideControls
+                icon={<IconLocation />}
+                variant="filled"
+                placeholder="Enter  Address"
+              />
+            </>
+          )}
+          <Group>
+            <Button
+              onClick={() => setAdditional((p) => !p)}
+              variant="subtle"
+              compact
+            >
+              I Am Agreed To The Term's And Conditions
+            </Button>
+          </Group>
           <Button
             variant="filled"
             className="bg-main-5 hover:bg-main-7 duration-300"

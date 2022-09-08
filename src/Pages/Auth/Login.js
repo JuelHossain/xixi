@@ -39,7 +39,7 @@ const Login = () => {
             Login
           </Button>
         </Stack>
-        <Group position="center">
+        <Group position="center" >
           <Button component={Link} variant="outline" compact to="/register">
             Register Here
           </Button>
