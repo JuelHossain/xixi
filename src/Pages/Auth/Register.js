@@ -1,19 +1,27 @@
 import {
+  Box,
   Button,
+  Card,
   Chip,
   Group,
+  Notification,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconKey, IconMail, IconUserExclamation } from "@tabler/icons";
-import React from "react";
+import { IconKey, IconMail, IconUserExclamation, IconX } from "@tabler/icons";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-  const { getInputProps, onSubmit } = useForm({
+  const [{ isError, message }, setError] = useState({
+    isError: false,
+    message: "",
+  });
+  const { getInputProps, onSubmit, errors, isDirty, clearErrors } = useForm({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -35,17 +43,46 @@ const Register = () => {
         (value.length < 6 && "Password Must be at least six Digits long") ||
         (value !== values.password && "Password did not match"),
       agreed: (value) =>
-        value ? null : "You Must Agree To The Term's And Conditions",
+        value ? null : "You Must Agree To The Term's & Conditions",
     },
   });
+  useEffect(() => {
+    if (isDirty()) {
+      setError({
+        isError: false,
+        message: "",
+      });
+    }
+  }, [isDirty]);
   return (
-    <Stack className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30">
+    <Card
+      withBorder
+      radius={"md"}
+      className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30"
+    >
       <Stack>
         <Title align="center" order={3} className="text-main-5">
           Register Here
         </Title>
 
-        <Stack component={"form"} onSubmit={onSubmit((v) => console.log(v))}>
+        <Stack
+          component={"form"}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!isDirty()) {
+              setError({
+                isError: true,
+                message: "You Did Not Entered Any Information",
+              });
+            } else {
+              setError({
+                isError: false,
+                message: "",
+              });
+              onSubmit((v) => console.log(v))(e);
+            }
+          }}
+        >
           <Group className="xs:flex-nowrap">
             <TextInput
               {...getInputProps("firstName")}
@@ -80,14 +117,41 @@ const Register = () => {
             variant="filled"
             placeholder="Confirm Password"
           />
+          <Box>
+            <Group>
+              <Chip
+                {...getInputProps("agreed", { type: "checkbox" })}
+                radius="sm"
+                variant="filled"
+              >
+                Agreed To The Term's & Conditions
+              </Chip>
+              {Object.keys(errors).length !== 0 && (
+                <Button
+                  className="hidden xs:flex bg-main-6 hover:bg-main-7 duration-300"
+                  compact
+                  onClick={clearErrors}
+                >
+                  Clear Error
+                </Button>
+              )}
+            </Group>
+            {errors.agreed && (
+              <Text className="p-1" size={"xs"} color={"red"}>
+                {errors.agreed}
+              </Text>
+            )}
+          </Box>
 
-          <Chip
-            {...getInputProps("agreed", { type: "checkbox" })}
-            radius="sm"
-            variant="filled"
-          >
-            Agreed To The Term's & Conditions
-          </Chip>
+          {isError && (
+            <Notification
+              onClose={() => setError({ isError: false })}
+              icon={<IconX size={18} />}
+              color="red"
+            >
+              {message}
+            </Notification>
+          )}
 
           <Button
             type="submit"
@@ -106,7 +170,7 @@ const Register = () => {
           </Button>
         </Group>
       </Stack>
-    </Stack>
+    </Card>
   );
 };
 
