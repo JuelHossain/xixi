@@ -20,6 +20,7 @@ export default function Banner() {
 
   return (
     <Carousel
+      
       slideSize="25%"
       breakpoints={[
         { maxWidth: "lg", slideSize: "33%", slideGap: "lg" },

@@ -10,7 +10,7 @@ import UserMenu from "./Helper/UserMenu";
 export default function HeaderTabs() {
   const [user, loading, error] = useAuthState(auth);
   return (
-    <Box className=" shadow shadow-neu-3 dark:shadow-neu-8 py-2 sticky top-0">
+    <Box className=" shadow shadow-neu-3 dark:shadow-neu-8 py-2 will-change-scroll:">
       <Container className="flex flex-col gap-3">
         <Group position="apart" spacing={"sm"}>
           <Group noWrap position="start" spacing={"sm"} className="flex-1">

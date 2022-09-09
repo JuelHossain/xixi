@@ -42,7 +42,7 @@ export default function UserMenu() {
         </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        <UserLinks/>
+        <UserLinks />
       </Menu.Dropdown>
     </Menu>
   );

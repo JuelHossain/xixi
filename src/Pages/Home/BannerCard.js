@@ -13,6 +13,7 @@ import { IconBookmark, IconHeart, IconShare } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
   card: {
+    zIndex: 0,
     position: "relative",
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
@@ -48,8 +49,6 @@ const useStyles = createStyles((theme) => ({
     marginTop: theme.spacing.md,
   },
 }));
-
-
 
 export default function BannerCard({
   className,
@@ -99,7 +98,7 @@ export default function BannerCard({
 
       <Group position="apart" className={classes.footer}>
         <Center>
-          <Avatar  size={24} radius="xl" mr="xs" />
+          <Avatar size={24} radius="xl" mr="xs" />
           <Text size="sm" inline>
             {author.name}
           </Text>
