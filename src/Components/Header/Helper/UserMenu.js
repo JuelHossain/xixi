@@ -1,61 +1,13 @@
-import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
+import { Avatar, Button, Group, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconChevronDown,
-  IconGift,
-  IconLayoutList,
-  IconLogout,
-  IconShoppingCart,
-  IconUserCheck,
-} from "@tabler/icons";
-import { Fragment } from "react";
-
-const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
-  image:
-    "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
-};
+import { IconChevronDown } from "@tabler/icons";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../../firebase";
+import UserLinks from "./UserLinks";
 
 export default function UserMenu() {
+  const [user, loading, error] = useAuthState(auth);
   const [, { toggle }] = useDisclosure(false);
-  const userLinks = [
-    {
-      label: "Shopping",
-      item: [
-        {
-          name: "Shopping Cart",
-          link: "/user-cart",
-          icon: <IconShoppingCart size={20} className="text-main-5" />,
-        },
-        {
-          name: "Your Orders",
-          link: "/user-orders",
-          icon: <IconLayoutList size={20} className="text-main-5" />,
-        },
-        {
-          name: "Wish List",
-          link: "/user-wishlist",
-          icon: <IconGift size={20} className="text-main-5" />,
-        },
-      ],
-    },
-    {
-      label: "Settings",
-      item: [
-        {
-          name: "Profile",
-          link: "/profile",
-          icon: <IconUserCheck size={20} className="text-main-5" />,
-        },
-        {
-          name: "Logout",
-          link: "/Logout",
-          icon: <IconLogout size={20} className="text-main-5" />,
-        },
-      ],
-    },
-  ];
 
   return (
     <Menu
@@ -66,7 +18,9 @@ export default function UserMenu() {
       onOpen={toggle}
     >
       <Menu.Target>
-        <UnstyledButton
+        <Button
+          unstyled
+          loading={loading}
           className={
             "hover:bg-main-2 hover:text-black rounded px-2 py-1 duration-300"
           }
@@ -81,30 +35,14 @@ export default function UserMenu() {
               }}
               mr={3}
             >
-              {user.name}
+              {user?.displayName}
             </Text>
             <IconChevronDown size={12} stroke={1.5} />
           </Group>
-        </UnstyledButton>
+        </Button>
       </Menu.Target>
       <Menu.Dropdown>
-        {userLinks.map((links, index) => {
-          return (
-            <Fragment key={Math.random()}>
-              <Menu.Label className="text-main-5">{links.label}</Menu.Label>
-              {links.item.map((item) => (
-                <Menu.Item
-                  className="hover:bg-main-0 dark:hover:bg-main-9/20"
-                  key={Math.random()}
-                  icon={item.icon}
-                >
-                  {item.name}
-                </Menu.Item>
-              ))}
-              {index === userLinks.length - 1 || <Menu.Divider />}
-            </Fragment>
-          );
-        })}
+        <UserLinks/>
       </Menu.Dropdown>
     </Menu>
   );

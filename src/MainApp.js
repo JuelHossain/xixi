@@ -5,6 +5,7 @@ import AppHeader from "./Components/Header/AppHeader";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import Home from "./Pages/Home/home";
+import Profile from "./Pages/User/Profile/Profile";
 
 export default function MainApp() {
   return (
@@ -12,7 +13,7 @@ export default function MainApp() {
       unstyled
       className="min-h-screen flex flex-col justify-between gap-10"
       navbarOffsetBreakpoint="sm"
-      header={<AppHeader />}
+      header={<AppHeader  />}
       footer={<AppFooter />}
     >
       <Container>
@@ -21,6 +22,8 @@ export default function MainApp() {
           <Route path="/home" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/user-profile" element={<Profile />}></Route>
         </Routes>
       </Container>
     </AppShell>

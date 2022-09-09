@@ -4,6 +4,7 @@ import {
   Card,
   Chip,
   Group,
+  LoadingOverlay,
   Notification,
   PasswordInput,
   Stack,
@@ -14,75 +15,99 @@ import {
 import { useForm } from "@mantine/form";
 import { IconKey, IconMail, IconUserExclamation, IconX } from "@tabler/icons";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "../../firebase";
+import SpPasswordInput from "./Components/SpPasswordInput";
 
 const Register = () => {
-  const [{ isError, message }, setError] = useState({
-    isError: false,
-    message: "",
-  });
-  const { getInputProps, onSubmit, errors, isDirty, clearErrors } = useForm({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      agreed: false,
-    },
-    validate: {
-      firstName: (value) =>
-        value.length < 3 && "Name must be at least 3 letters",
-      lastName: (value) =>
-        value.length < 3 && "Name must be at least 3 letters",
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid Email"),
-      password: (value, values) =>
-        (value.length < 6 && "Password Must be at least six Digits long") ||
-        (value !== values.confirmPassword && "Password did not match"),
-      confirmPassword: (value, values) =>
-        (value.length < 6 && "Password Must be at least six Digits long") ||
-        (value !== values.password && "Password did not match"),
-      agreed: (value) =>
-        value ? null : "You Must Agree To The Term's & Conditions",
-    },
-  });
+  const [error, setError] = useState("");
+  const [createUserWithEmailAndPassword, user, userLoading, userError] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+
+  const { getInputProps, onSubmit, errors, isDirty, clearErrors, values } =
+    useForm({
+      initialValues: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        agreed: false,
+      },
+      validate: {
+        firstName: (value) =>
+          value.length < 3 && "Name must be at least 3 letters",
+        lastName: (value) =>
+          value.length < 3 && "Name must be at least 3 letters",
+        email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid Email"),
+        password: (value, values) => {
+          if (
+            /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(value)
+          ) {
+            if (value !== values.confirmPassword) {
+              return "Password Doesn't Match";
+            }
+          } else {
+            return "Please Follow The Password Requirements";
+          }
+        },
+        confirmPassword: (value, values) => {
+          if (value === "") {
+            return "Please Confirm Your Password";
+          }
+          if (value !== values.password) {
+            return "Password Doesn't Match";
+          }
+        },
+        agreed: (value) =>
+          value ? null : "You Must Agree To The Term's & Conditions",
+      },
+    });
+  const navigate = useNavigate();
   useEffect(() => {
     if (isDirty()) {
-      setError({
-        isError: false,
-        message: "",
-      });
+      setError("");
     }
-  }, [isDirty]);
+    if (userError) {
+      setError(userError.message);
+    }
+    if (!userLoading && !userError && user) {
+      navigate("/");
+    }
+  }, [isDirty, user, userLoading, userError, navigate]);
+
+  const registerHandler = (e) => {
+    e.preventDefault();
+    if (!isDirty()) {
+      setError("You Did Not Entered Any Information");
+    } else {
+      setError("");
+      onSubmit(async (v) => {
+        const { firstName, lastName, email, password } = v;
+        await createUserWithEmailAndPassword(email, password);
+        await updateProfile({ displayName: `${firstName} ${lastName}` });
+      })(e);
+    }
+  };
   return (
     <Card
       withBorder
       radius={"md"}
       className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30"
     >
+      <LoadingOverlay visible={userLoading || updating} overlayBlur={2} />
+
       <Stack>
         <Title align="center" order={3} className="text-main-5">
           Register Here
         </Title>
 
-        <Stack
-          component={"form"}
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!isDirty()) {
-              setError({
-                isError: true,
-                message: "You Did Not Entered Any Information",
-              });
-            } else {
-              setError({
-                isError: false,
-                message: "",
-              });
-              onSubmit((v) => console.log(v))(e);
-            }
-          }}
-        >
+        <Stack component={"form"} onSubmit={registerHandler}>
           <Group className="xs:flex-nowrap">
             <TextInput
               {...getInputProps("firstName")}
@@ -105,11 +130,10 @@ const Register = () => {
             variant="filled"
             placeholder="Enter Email"
           />
-          <PasswordInput
-            {...getInputProps("password")}
-            icon={<IconKey />}
-            variant="filled"
-            placeholder="Enter Password"
+          <SpPasswordInput
+            getInputProps={getInputProps}
+            value={values?.password}
+            error={errors?.password}
           />
           <PasswordInput
             {...getInputProps("confirmPassword")}
@@ -143,13 +167,13 @@ const Register = () => {
             )}
           </Box>
 
-          {isError && (
+          {error && (
             <Notification
-              onClose={() => setError({ isError: false })}
+              onClose={() => setError("")}
               icon={<IconX size={18} />}
               color="red"
             >
-              {message}
+              {error}
             </Notification>
           )}
 

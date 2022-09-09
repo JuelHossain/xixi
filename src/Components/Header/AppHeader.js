@@ -1,14 +1,16 @@
 import { Box, Container, Group } from "@mantine/core";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase";
 import ChangeTheme from "./Helper/ChangeTheme";
+import LoginButton from "./Helper/LoginButton";
 import Logo from "./Helper/Logo";
 import NavLinks from "./Helper/NavLinks";
 import UserMenu from "./Helper/UserMenu";
-import LoginButton from "./Helper/LoginButton"
 
 export default function HeaderTabs() {
-  const user = false;
+  const [user, loading, error] = useAuthState(auth);
   return (
-    <Box className=" shadow shadow-neu-3 dark:shadow-neu-8 py-2">
+    <Box className=" shadow shadow-neu-3 dark:shadow-neu-8 py-2 sticky top-0">
       <Container className="flex flex-col gap-3">
         <Group position="apart" spacing={"sm"}>
           <Group noWrap position="start" spacing={"sm"} className="flex-1">

@@ -4,6 +4,8 @@ import {
   Card,
   Divider,
   Group,
+  LoadingOverlay,
+  Notification,
   PasswordInput,
   Stack,
   Text,
@@ -12,14 +14,20 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useToggle } from "@mantine/hooks";
-import { IconAt, IconKey } from "@tabler/icons";
-import React from "react";
-import { Link } from "react-router-dom";
-import SendEmailDialog from "./Helper/SendEmailDialog";
-import SocialLogin from "./Helper/SocialLogin";
+import { IconAt, IconKey, IconX } from "@tabler/icons";
+import React, { useEffect, useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import auth from "../../firebase";
+import SendEmailDialog from "./Components/SendEmailDialog";
+import SocialLogin from "./Components/SocialLogin";
 
 const Login = () => {
   const [status, toggle] = useToggle();
+  const [error, setError] = useState("");
+  const [signInWithEmailAndPassword, user, userLoading, userError] =
+    useSignInWithEmailAndPassword(auth);
+
   const { getInputProps, onSubmit } = useForm({
     initialValues: {
       email: "",
@@ -31,6 +39,22 @@ const Login = () => {
         value.length < 6 && "Password Must be at least six Digits long",
     },
   });
+  const submitHandler = onSubmit((v) => {
+    signInWithEmailAndPassword(v.email, v.password);
+  });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    if (userError) {
+      setError(userError.message);
+    }
+    if (!userError && user) {
+      navigate(from);
+      setError("");
+    }
+  }, [userError, user, navigate, from]);
 
   return (
     <Card
@@ -38,6 +62,7 @@ const Login = () => {
       radius={"md"}
       className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30"
     >
+      <LoadingOverlay visible={userLoading} overlayBlur={2} />
       <Stack>
         <Box>
           <Title align="center" order={3} className="text-main-5">
@@ -47,7 +72,7 @@ const Login = () => {
             With Email And Password
           </Text>
         </Box>
-        <Stack component={"form"} onSubmit={onSubmit((v) => console.log(v))}>
+        <Stack component={"form"} onSubmit={submitHandler}>
           <TextInput
             icon={<IconAt />}
             variant="filled"
@@ -60,6 +85,15 @@ const Login = () => {
             variant="filled"
             placeholder="Your Password"
           />
+          {error && (
+            <Notification
+              onClose={() => setError("")}
+              icon={<IconX size={18} />}
+              color="red"
+            >
+              {error}
+            </Notification>
+          )}
           <Button
             type="submit"
             variant="filled"
@@ -71,14 +105,6 @@ const Login = () => {
         <Group position="center">
           <Button component={Link} variant="outline" compact to="/register">
             Register Here
-          </Button>
-          <Button
-            variant="outline"
-            compact
-            to="/register"
-            onClick={() => toggle()}
-          >
-            Forgot Password?
           </Button>
           <SendEmailDialog status={status} toggle={toggle} />
         </Group>
