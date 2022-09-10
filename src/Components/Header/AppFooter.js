@@ -1,4 +1,4 @@
-import { ActionIcon, Container, Group, Text } from "@mantine/core";
+import { ActionIcon, Container, Footer, Group, Text } from "@mantine/core";
 import {
   IconBrandInstagram,
   IconBrandTwitter,
@@ -7,7 +7,7 @@ import {
 
 export default function AppFooter() {
   return (
-    <footer className="py-5 border-t border-main-1 dark:border-main-1/10">
+    <Footer className="py-5 border-t border-main-1 dark:border-main-1/10">
       <Container className="flex justify-between flex-wrap">
         <Text color="dimmed" size="sm">
           © 2020 mantine.dev. All rights reserved.
@@ -25,6 +25,6 @@ export default function AppFooter() {
           </ActionIcon>
         </Group>
       </Container>
-    </footer>
+    </Footer>
   );
 }

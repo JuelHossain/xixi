@@ -14,17 +14,17 @@ export const userLinks = [
     item: [
       {
         name: "Shopping Cart",
-        link: "/user-cart",
+        link: "/user/cart",
         icon: <IconShoppingCart size={20} className="text-main-5" />,
       },
       {
         name: "Your Orders",
-        link: "/user-orders",
+        link: "/user/orders",
         icon: <IconLayoutList size={20} className="text-main-5" />,
       },
       {
         name: "Wish List",
-        link: "/user-wishlist",
+        link: "/user/wishlist",
         icon: <IconGift size={20} className="text-main-5" />,
       },
     ],
@@ -34,7 +34,7 @@ export const userLinks = [
     item: [
       {
         name: "Profile",
-        link: "/user-profile",
+        link: "/user/profile",
         icon: <IconUserCheck size={20} className="text-main-5" />,
       },
       {

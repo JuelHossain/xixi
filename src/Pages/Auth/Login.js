@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../firebase";
+import Error from "./Components/Error";
 import SendEmailDialog from "./Components/SendEmailDialog";
 import SocialLogin from "./Components/SocialLogin";
 
@@ -44,7 +45,9 @@ const Login = () => {
   });
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location?.state?.from?.pathname || "/";
+  const from = location?.state?.from || "/";
+
+
 
   useEffect(() => {
     if (userError) {
@@ -85,15 +88,7 @@ const Login = () => {
             variant="filled"
             placeholder="Your Password"
           />
-          {error && (
-            <Notification
-              onClose={() => setError("")}
-              icon={<IconX size={18} />}
-              color="red"
-            >
-              {error}
-            </Notification>
-          )}
+          <Error error={error} setError={setError}/>
           <Button
             type="submit"
             variant="filled"

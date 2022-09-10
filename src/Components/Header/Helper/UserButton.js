@@ -1,21 +1,20 @@
 import { Avatar, Button, Group, Text } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase";
 
 const UserButton = ({ exclass }) => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   return (
     <Button
       unstyled
       loading={loading}
-      className={`hover:bg-main-2 hover:text-black rounded px-2 py-1 duration-300 ${exclass}`}
+      className={`bg-main-2 dark:bg-main-8/50  rounded px-4 py-2 duration-300 mb-2 hover:bg-main-3 dark:text-main-2`}
     >
       <Group spacing={7}>
         <Avatar
-          src={user?.image}
+          src={user?.photoURL}
           alt={user?.displayName}
           radius="xl"
           size={20}
@@ -30,7 +29,7 @@ const UserButton = ({ exclass }) => {
         >
           {user?.displayName}
         </Text>
-        <IconChevronDown size={12} stroke={1.5} />
+        {/* <IconCircleCheck size={12} stroke={1.5} /> */}
       </Group>
     </Button>
   );

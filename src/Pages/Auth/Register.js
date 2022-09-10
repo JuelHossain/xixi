@@ -4,8 +4,6 @@ import {
   Card,
   Chip,
   Group,
-  LoadingOverlay,
-  Notification,
   PasswordInput,
   Stack,
   Text,
@@ -13,14 +11,16 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconKey, IconMail, IconUserExclamation, IconX } from "@tabler/icons";
+import { IconKey, IconMail, IconUserExclamation } from "@tabler/icons";
 import React, { useEffect, useState } from "react";
 import {
   useCreateUserWithEmailAndPassword,
   useUpdateProfile,
 } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
+import Loading from "../../Components/Shared/Loading";
 import auth from "../../firebase";
+import Error from "./Components/Error";
 import SpPasswordInput from "./Components/SpPasswordInput";
 
 const Register = () => {
@@ -68,18 +68,20 @@ const Register = () => {
           value ? null : "You Must Agree To The Term's & Conditions",
       },
     });
+
   const navigate = useNavigate();
+
   useEffect(() => {
     if (isDirty()) {
       setError("");
     }
-    if (userError) {
-      setError(userError.message);
+    if (userError || updateError) {
+      setError(userError.message || updateError.message);
     }
     if (!userLoading && !userError && user) {
       navigate("/");
     }
-  }, [isDirty, user, userLoading, userError, navigate]);
+  }, [isDirty, user, userLoading, userError, updateError, navigate]);
 
   const registerHandler = (e) => {
     e.preventDefault();
@@ -100,7 +102,7 @@ const Register = () => {
       radius={"md"}
       className="max-w-md mx-auto shadow-md p-5 dark:bg-neu-9/30"
     >
-      <LoadingOverlay visible={userLoading || updating} overlayBlur={2} />
+      <Loading visible={userLoading || updating} />
 
       <Stack>
         <Title align="center" order={3} className="text-main-5">
@@ -166,17 +168,7 @@ const Register = () => {
               </Text>
             )}
           </Box>
-
-          {error && (
-            <Notification
-              onClose={() => setError("")}
-              icon={<IconX size={18} />}
-              color="red"
-            >
-              {error}
-            </Notification>
-          )}
-
+          <Error error={error} setError={setError} />
           <Button
             type="submit"
             variant="filled"
