@@ -1,5 +1,4 @@
-import { AppShell, Container, Header, useMantineTheme } from "@mantine/core";
-import { useEffect } from "react";
+import { AppShell, Container, Header } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 import AppFooter from "./Components/Header/AppFooter";
 import AppHeader from "./Components/Header/AppHeader";
@@ -11,14 +10,8 @@ import Orders from "./Pages/User/Orders";
 import Profile from "./Pages/User/Profile";
 import User from "./Pages/User/User";
 import WishList from "./Pages/User/WishList";
-import { setRootColor } from "./utils/colors";
 
 export default function MainApp() {
-  const { colors } = useMantineTheme();
-
-  useEffect(() => {
-    setRootColor(colors);
-  }, [colors]);
   return (
     <AppShell
       unstyled

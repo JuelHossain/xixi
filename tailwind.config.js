@@ -1,6 +1,9 @@
+const { getTailColors } = require("@juel/hooks/tailwind");
+const { lightColors } = require("./src/utils/colors");
+const tailColors = getTailColors(lightColors);
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: ["class"],
+  darkMode: "class",
   theme: {
     screens: {
       xxs: "400px",
@@ -12,45 +15,7 @@ module.exports = {
       xxl: "1600px",
     },
     extend: {
-      colors: {
-        main: {
-          0: "rgb(var(--main-0)/<alpha-value>)",
-          1: "rgb(var(--main-1)/<alpha-value>)",
-          2: "rgb(var(--main-2)/<alpha-value>)",
-          3: "rgb(var(--main-3)/<alpha-value>)",
-          4: "rgb(var(--main-4)/<alpha-value>)",
-          5: "rgb(var(--main-5)/<alpha-value>)",
-          6: "rgb(var(--main-6)/<alpha-value>)",
-          7: "rgb(var(--main-7)/<alpha-value>)",
-          8: "rgb(var(--main-8)/<alpha-value>)",
-          9: "rgb(var(--main-9)/<alpha-value>)",
-        },
-        sec: {
-          0: "rgb(var(--sec-0)/<alpha-value>)",
-          1: "rgb(var(--sec-1)/<alpha-value>)",
-          2: "rgb(var(--sec-2)/<alpha-value>)",
-          3: "rgb(var(--sec-3)/<alpha-value>)",
-          4: "rgb(var(--sec-4)/<alpha-value>)",
-          5: "rgb(var(--sec-5)/<alpha-value>)",
-          6: "rgb(var(--sec-6)/<alpha-value>)",
-          7: "rgb(var(--sec-7)/<alpha-value>)",
-          8: "rgb(var(--sec-8)/<alpha-value>)",
-          9: "rgb(var(--sec-9)/<alpha-value>)",
-        },
-        neu: {
-          0: "rgb(var(--neu-0)/<alpha-value>)",
-          1: "rgb(var(--neu-1)/<alpha-value>)",
-          2: "rgb(var(--neu-2)/<alpha-value>)",
-          3: "rgb(var(--neu-3)/<alpha-value>)",
-          4: "rgb(var(--neu-4)/<alpha-value>)",
-          5: "rgb(var(--neu-5)/<alpha-value>)",
-          6: "rgb(var(--neu-6)/<alpha-value>)",
-          7: "rgb(var(--neu-7)/<alpha-value>)",
-          8: "rgb(var(--neu-8)/<alpha-value>)",
-          9: "rgb(var(--neu-9)/<alpha-value>)",
-        },
-      },
+      colors: tailColors,
     },
   },
-  plugins: [],
 };
